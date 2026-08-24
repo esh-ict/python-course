@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build 4 — Rock, paper, scissors — ICT S5 — Python</title>
+<link rel="stylesheet" href="../site.css">
+<link rel="stylesheet" href="../pyeditor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+</head>
+<body>
+<header class="top">
+  <a class="home" href="index.html">ICT S5 — Python</a>
+  <span class="crumb"></span>
+</header>
+<main>
+  <p class="eyebrow">Page 12 of 16</p>
+  <h1>Build 4 — Rock, paper, scissors</h1>
+  <p>One round against the computer. Small on the surface, and the neatest thinking problem of the four.</p>
+<h2>WHAT IT MUST DO</h2>
+<ul><li>Ask the user for rock, paper or scissors.</li><li>The computer chooses one at random.</li><li>Show both choices and say who won.</li><li>Reject anything that is not one of the three words, with a message that tells the user what is allowed.</li></ul>
+<pre class="sample">    import random
+    choices = [&quot;rock&quot;, &quot;paper&quot;, &quot;scissors&quot;]
+    computer = random.choice(choices)
+
+Sample Output :
+    Rock, paper or scissors? paper
+    The computer chose rock.
+    Paper covers rock — you win.</pre>
+<h2>DECISIONS YOU HAVE TO MAKE</h2>
+<ul><li>There are nine possible combinations. Write all nine down before you write any code, and mark each as win, lose or draw.</li><li>Nine tests would work. Three would also work, if you think about what the three winning combinations have in common. Try to find the shorter version — but a working long version beats a broken short one.</li><li>The draw case is easy to spot. Handle it first and you have six left.</li><li>Where does the invalid-input check belong: before the computer chooses, or after? Does it matter?</li></ul>
+<h2>IF YOU FINISH EARLY</h2>
+<pre class="sample">Add lizard and Spock. There are now twenty-five combinations and five ways to win.
+Do not write twenty-five tests. Find the pattern first, and if you cannot, that is a genuinely interesting thing to have discovered — bring it to me.</pre><h2 class="acts">Scratchpad</h2>
+<div class="pyeditor" data-task="24-build-rock-paper-scissors-scratch" data-unit="S5-Python" data-height="200">
+<script type="text/x-python">
+# 24-build-rock-paper-scissors — try things out here
+</script>
+</div>
+  <nav class="pager"><a class="prev" href="23-build-dice-duel.html">&larr; Build 3 — Dice duel</a><a class="next" href="25-while-loop.html">While loop &rarr;</a></nav>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script>window.PYEDITOR_CONFIG={course:"ICT S5 — Python",school:"European School The Hague"};</script>
+<script src="../pyeditor.js"></script>
+</body>
+</html>

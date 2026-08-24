@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build 1 — Marks calculator — ICT S5 — Python</title>
+<link rel="stylesheet" href="../site.css">
+<link rel="stylesheet" href="../pyeditor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+</head>
+<body>
+<header class="top">
+  <a class="home" href="index.html">ICT S5 — Python</a>
+  <span class="crumb"></span>
+</header>
+<main>
+  <p class="eyebrow">Page 9 of 16</p>
+  <h1>Build 1 — Marks calculator</h1>
+  <p>From here on the tasks are bigger. One program, several parts, and decisions that nobody makes for you.</p>
+<p>This is not graded. Nothing in this part of the course goes into a mark. What it is for is making sure that when we start loops together, you already have everything else working without thinking about it.</p>
+<p>A teacher wants a program that turns three marks into a report line for one student.</p>
+<h2>WHAT IT MUST DO</h2>
+<ul><li>Ask for the student&#x27;s name.</li><li>Ask for three marks out of 10: a test, a project, and classwork.</li><li>Weight them: the test counts 50%, the project 30%, the classwork 20%.</li><li>Print the weighted average to one decimal place.</li><li>Print the grade letter for that average, using the European Baccalaureate bands:</li></ul>
+<pre class="sample">    A  9.0 and above
+    B  8.0 to 8.9
+    C  7.0 to 7.9
+    D  6.0 to 6.9
+    E  5.0 to 5.9
+    F  below 5.0</pre>
+<ul><li>Print a one-line comment that depends on the grade. You choose the wording.</li></ul>
+<pre class="sample">Sample Output :
+    Student name: Ines
+    Test mark out of 10: 8
+    Project mark out of 10: 9.5
+    Classwork mark out of 10: 7
+
+    Ines — weighted average 8.35 — grade B
+    Solid work, close to an A.</pre>
+<h2>DECISIONS YOU HAVE TO MAKE</h2>
+<p>These have no single right answer. Decide, then be able to explain what you decided and why.</p>
+<ul><li>A mark of exactly 8.0 — which band does it fall into? Make sure your program agrees with your answer.</li><li>What should happen if somebody types 15 out of 10?</li><li>Marks can be 9.5, so which type do you read them as?</li><li>The average will come out as 8.349999999 unless you do something about it. What?</li></ul>
+<h2>IF YOU FINISH EARLY</h2>
+<pre class="sample">Add a fourth mark for homework and change the weights so they still add up to 100%.
+Then check: does your grade band code need changing at all? Why not?</pre><h2 class="acts">Scratchpad</h2>
+<div class="pyeditor" data-task="21-build-marks-calculator-scratch" data-unit="S5-Python" data-height="200">
+<script type="text/x-python">
+# 21-build-marks-calculator — try things out here
+</script>
+</div>
+  <nav class="pager"><a class="prev" href="20-warm-up.html">&larr; Warm-up</a><a class="next" href="22-build-cafe-till.html">Build 2 — Café till &rarr;</a></nav>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script>window.PYEDITOR_CONFIG={course:"ICT S5 — Python",school:"European School The Hague"};</script>
+<script src="../pyeditor.js"></script>
+</body>
+</html>

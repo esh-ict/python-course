@@ -1,0 +1,192 @@
+/* pyeditor.css — European School The Hague, ICT S4–S5
+   No web-font requests: system faces only, so no third-party font calls. */
+
+.pyed,
+.pyed-ws,
+.rev {
+  --paper: #e7edea;
+  --surface: #ffffff;
+  --code-bg: #fcfdfc;
+  --ink: #10242e;
+  --muted: #5a6e73;
+  --rule: #c6d3ce;
+  --rule-soft: #dde5e2;
+  --mark: #a93917;
+  --saved: #2c6a4f;
+  --focus: #1c5f7a;
+
+  --ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas,
+    "DejaVu Sans Mono", monospace;
+}
+
+/* ---------- editor block ---------- */
+
+.pyed {
+  font-family: var(--ui);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  margin: 1.5rem 0;
+  overflow: hidden;
+  box-shadow: 0 1px 0 var(--rule-soft);
+}
+
+.pyed-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.4rem 0.55rem;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+
+.pyed-task {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-right: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.pyed-btn {
+  font: inherit;
+  font-size: 0.82rem;
+  line-height: 1;
+  padding: 0.42rem 0.75rem;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+.pyed-btn:hover:not(:disabled) { border-color: var(--focus); color: var(--focus); }
+.pyed-btn:disabled { opacity: 0.45; cursor: default; }
+.pyed-btn:focus-visible,
+.pyed-plain:focus-visible,
+.rev button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+.pyed-btn--run { background: var(--ink); color: #fff; border-color: var(--ink); }
+.pyed-btn--run:hover:not(:disabled) { background: var(--focus); border-color: var(--focus); color: #fff; }
+
+.pyed-plain {
+  font: inherit;
+  font-size: 0.78rem;
+  background: none;
+  border: 0;
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  padding: 0.3rem 0.2rem;
+}
+.pyed-plain:hover { color: var(--mark); }
+
+/* the signature: this file, going to this exact place */
+.pyed-file {
+  width: 100%;
+  order: 10;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  padding-top: 0.15rem;
+  border-top: 1px dashed var(--rule);
+  margin-top: 0.15rem;
+}
+.pyed-file b { color: var(--ink); font-weight: 600; }
+.pyed-file .pyed-state { margin-left: auto; font-style: normal; }
+.pyed-state[data-s="unsaved"] { color: var(--mark); }
+.pyed-state[data-s="saved"] { color: var(--saved); }
+.pyed-state[data-s="saved"]::before { content: "\2713\00a0"; }
+
+.pyed-code { background: var(--code-bg); }
+.pyed-code textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  resize: vertical;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  tab-size: 4;
+  color: var(--ink);
+  background: var(--code-bg);
+}
+.pyed-code textarea:focus { outline: 2px solid var(--focus); outline-offset: -2px; }
+
+.pyed-out {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  border-top: 1px solid var(--rule);
+  background: var(--surface);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 15rem;
+  overflow: auto;
+  color: var(--ink);
+}
+.pyed-out:empty { display: none; }
+.pyed-out .err { color: var(--mark); }
+.pyed-out .note { color: var(--muted); font-family: var(--ui); font-size: 0.8rem; }
+
+/* ---------- workspace chip ---------- */
+
+.pyed-ws {
+  position: fixed;
+  right: 0.9rem;
+  bottom: 0.9rem;
+  z-index: 9999;
+  font-family: var(--ui);
+  font-size: 0.8rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--mark);
+  border-radius: 3px;
+  padding: 0.5rem 0.65rem;
+  max-width: 19rem;
+  box-shadow: 0 3px 14px rgba(16, 36, 46, 0.14);
+}
+.pyed-ws[data-ready="1"] { border-left-color: var(--saved); }
+.pyed-ws b { display: block; font-size: 0.68rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.2rem; }
+.pyed-ws .path { font-family: var(--mono); font-size: 0.76rem; word-break: break-all; }
+.pyed-ws .row { display: flex; gap: 0.4rem; align-items: center; margin-top: 0.4rem; flex-wrap: wrap; }
+
+/* ---------- CodeMirror, when present ---------- */
+
+.pyed .CodeMirror {
+  height: auto;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  background: var(--code-bg);
+  color: var(--ink);
+}
+.pyed .CodeMirror-gutters { background: var(--paper); border-right: 1px solid var(--rule-soft); }
+.pyed .CodeMirror-linenumber { color: var(--muted); }
+.pyed .CodeMirror-cursor { border-left: 2px solid var(--focus); }
+.pyed .cm-keyword { color: #7a3d8f; font-weight: 600; }
+.pyed .cm-builtin { color: var(--focus); }
+.pyed .cm-string { color: #2c6a4f; }
+.pyed .cm-number { color: #a05a00; }
+.pyed .cm-comment { color: var(--muted); font-style: italic; }
+.pyed .cm-def, .pyed .cm-variable-2 { color: #1c5f7a; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .pyed-state { transition: color 0.18s ease; }
+}

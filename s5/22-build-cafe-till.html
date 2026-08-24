@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build 2 — Café till — ICT S5 — Python</title>
+<link rel="stylesheet" href="../site.css">
+<link rel="stylesheet" href="../pyeditor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+</head>
+<body>
+<header class="top">
+  <a class="home" href="index.html">ICT S5 — Python</a>
+  <span class="crumb"></span>
+</header>
+<main>
+  <p class="eyebrow">Page 10 of 16</p>
+  <h1>Build 2 — Café till</h1>
+  <p>The school café wants a till program for one customer at a time.</p>
+<p>Everything here is arithmetic and branching. What makes it bigger than an exercise is that the parts depend on each other: the discount changes the total, the total changes the change, and the change has to come out as actual coins.</p>
+<h2>WHAT IT MUST DO</h2>
+<ul><li>The menu is fixed. Print it at the start.</li></ul>
+<pre class="sample">    Coffee      1.80
+    Tea         1.40
+    Sandwich    3.25
+    Cake        2.50</pre>
+<ul><li>Ask which item the customer wants and how many.</li><li>Work out the price before any discount.</li><li>Ask whether the customer is a student. Students get 15% off.</li><li>Print the total to two decimal places.</li><li>Ask how much money the customer hands over.</li><li>If it is not enough, say so and say how much is missing.</li><li>If it is enough, print the change owed, then break that change down into coins:</li></ul>
+<h2 class="acts">Activities</h2>
+<section class="task">
+<h3><span class="n">2</span>Activity 2</h3>
+<p>euro, 1 euro, 50 cent, 20 cent, 10 cent, 5 cent</p>
+<pre class="sample">Sample Output :
+    Coffee 1.80 / Tea 1.40 / Sandwich 3.25 / Cake 2.50
+
+    Item: sandwich
+    How many: 2
+    Student? yes
+
+    Total: 5.53
+    Cash given: 10.00
+    Change: 4.47
+      2 x 2 euro
+      0 x 1 euro
+      0 x 50 cent
+      2 x 20 cent
+      0 x 10 cent
+      1 x 5 cent</pre>
+<div class="pyeditor" data-task="22-build-cafe-till-02" data-unit="S5-Python" data-height="200">
+<script type="text/x-python">
+# 22-build-cafe-till — activity 2
+# Write your program here, then press Save.
+</script>
+</div>
+</section>
+<h2>DECISIONS YOU HAVE TO MAKE</h2>
+<p>* Money in euros is awkward to divide. Working in whole cents instead makes the coin breakdown much easier. Try it both ways if you have time and see which is less painful.</p>
+<p>* 4.47 cannot be paid exactly with those coins. What does your program do about the last 2 cents — round the change, or admit it cannot be paid? Either is defensible. Decide.</p>
+<p>* How do you handle a customer who types &quot;Sandwich&quot; instead of &quot;sandwich&quot;?</p>
+<p>* Should the discount apply before or after multiplying by the quantity? Does it make any difference? Prove it to yourself.</p>
+<h2>IF YOU FINISH EARLY</h2>
+<p>Add a second item to the same order, so the customer can buy a coffee and a cake together.</p>
+<p>You will notice this gets clumsy fast with what you currently know. That is expected — leave it clumsy.</p>
+  <nav class="pager"><a class="prev" href="21-build-marks-calculator.html">&larr; Build 1 — Marks calculator</a><a class="next" href="23-build-dice-duel.html">Build 3 — Dice duel &rarr;</a></nav>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script>window.PYEDITOR_CONFIG={course:"ICT S5 — Python",school:"European School The Hague"};</script>
+<script src="../pyeditor.js"></script>
+</body>
+</html>

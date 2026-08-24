@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warm-up — ICT S5 — Python</title>
+<link rel="stylesheet" href="../site.css">
+<link rel="stylesheet" href="../pyeditor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+</head>
+<body>
+<header class="top">
+  <a class="home" href="index.html">ICT S5 — Python</a>
+  <span class="crumb"></span>
+</header>
+<main>
+  <p class="eyebrow">Page 8 of 16</p>
+  <h1>Warm-up</h1>
+  <p>Five short programs. Each one needs several things working together at once: reading input, turning it into the right type, calculating something, and deciding what to print.</p>
+<p>None of this is new. What is new is that nobody tells you which piece to use where.</p>
+<p>Work through them quickly. If one of them takes you more than fifteen minutes, stop and ask — it means something from last year has gone rusty, and it is much better to find that out now.</p>
+<h2 class="acts">Activities</h2>
+<section class="task">
+<h3><span class="n">1</span>Activity 1</h3>
+<p><strong>BIRTHDAY COUNTDOWN</strong>: Ask the user for their age today and the month they were born (a number from 1 to 12). Ask for the current month as well. Print how old they will be at the end of this year, and whether their birthday has already passed.</p>
+<pre class="sample">    Sample Output :
+        Your age: 15
+        Birth month: 3
+        Current month: 9
+        You are 15 and your birthday has passed. You turn 16 next year.</pre>
+<div class="pyeditor" data-task="20-warm-up-01" data-unit="S5-Python" data-height="200">
+<script type="text/x-python">
+# 20-warm-up — activity 1
+# Write your program here, then press Save.
+</script>
+</div>
+</section>
+<section class="task">
+<h3><span class="n">2</span>Activity 2</h3>
+<p><strong>SPLIT THE BILL</strong>: A group eats together and splits the bill. Ask for the total amount and the number of people. Print how much each person pays, rounded down to whole euros, and how many cents are left over.</p>
+<pre class="sample">    The leftover is the part that does not divide evenly. Nobody should pay a fraction of a cent.
+
+    Sample Output :
+        Total in euros: 87
+        Number of people: 5
+        Each person pays 17 euros, with 2 euros left over.</pre>
+<div class="pyeditor" data-task="20-warm-up-02" data-unit="S5-Python" data-height="200">
+<script type="text/x-python">
+# 20-warm-up — activity 2
+# Write your program here, then press Save.
+</script>
+</div>
+</section>
+<section class="task">
+<h3><span class="n">3</span>Activity 3</h3>
+<p><strong>PASSWORD CHECK</strong>: Ask the user for a password. Print one of three messages: too short if it is under 8 characters, weak if it is 8 to 11, and strong if it is 12 or more.</p>
+<pre class="sample">    You will need len(). If you have not met it, that is fine — len(&quot;hello&quot;) gives 5.</pre>
+<div class="pyeditor" data-task="20-warm-up-03" data-unit="S5-Python" data-height="200">
+<script type="text/x-python">
+# 20-warm-up — activity 3
+# Write your program here, then press Save.
+</script>
+</div>
+</section>
+<section class="task">
+<h3><span class="n">4</span>Activity 4</h3>
+<p><strong>DICE OR CHOICE</strong>: The computer secretly picks a number between 1 and 6. Ask the user to guess. Tell them whether they were too high, too low, or exactly right, and reveal the number.</p>
+<div class="pyeditor" data-task="20-warm-up-04" data-unit="S5-Python" data-height="200">
+<script type="text/x-python">
+import random
+secret = random.randint(1, 6)
+</script>
+</div>
+</section>
+<section class="task">
+<h3><span class="n">5</span>Activity 5</h3>
+<p><strong>TICKET PRICE</strong>: A cinema charges 12 euros. Under 12 years old pays half. Over 65 pays 8 euros. On Tuesdays everybody pays 7 euros regardless of age. Ask for the age and whether it is Tuesday, then print the price.</p>
+<pre class="sample">    Think about the order of your tests before you write them. One of these rules overrides the others.</pre>
+<div class="pyeditor" data-task="20-warm-up-05" data-unit="S5-Python" data-height="200">
+<script type="text/x-python">
+# 20-warm-up — activity 5
+# Write your program here, then press Save.
+</script>
+</div>
+</section>
+  <nav class="pager"><a class="prev" href="07-randomness.html">&larr; Randomness</a><a class="next" href="21-build-marks-calculator.html">Build 1 — Marks calculator &rarr;</a></nav>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script>window.PYEDITOR_CONFIG={course:"ICT S5 — Python",school:"European School The Hague"};</script>
+<script src="../pyeditor.js"></script>
+</body>
+</html>

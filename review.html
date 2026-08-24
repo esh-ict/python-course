@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code review — ICT S4–S5</title>
+<link rel="stylesheet" href="pyeditor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<style>
+  body { margin: 0; background: var(--paper, #e7edea); }
+  .rev { font-family: var(--ui); color: var(--ink); max-width: 78rem; margin: 0 auto; padding: 1.2rem 1.1rem 4rem; }
+  .rev h1 { font-size: 1.05rem; letter-spacing: 0.1em; text-transform: uppercase; margin: 0 0 0.15rem; }
+  .rev .sub { color: var(--muted); font-size: 0.85rem; margin: 0 0 1.1rem; }
+  .rev button { font: inherit; font-size: 0.82rem; padding: 0.42rem 0.8rem; border: 1px solid var(--rule); border-radius: 2px; background: #fff; color: var(--ink); cursor: pointer; }
+  .rev button:hover { border-color: var(--focus); color: var(--focus); }
+  .rev button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .rev .toolbar { display: flex; gap: 0.45rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+  .rev .toolbar .spacer { margin-left: auto; }
+  .rev input[type="search"] { font: inherit; font-size: 0.82rem; padding: 0.42rem 0.6rem; border: 1px solid var(--rule); border-radius: 2px; }
+
+  /* coverage matrix — the register */
+  .grid-wrap { background: #fff; border: 1px solid var(--rule); border-radius: 3px; overflow: auto; margin-bottom: 1.4rem; }
+  table.grid { border-collapse: collapse; font-size: 0.78rem; }
+  table.grid th, table.grid td { border-bottom: 1px solid var(--rule-soft); padding: 0.3rem 0.45rem; text-align: center; }
+  table.grid th.who { text-align: left; font-weight: 600; white-space: nowrap; position: sticky; left: 0; background: #fff; z-index: 2; }
+  table.grid thead th { font-weight: 600; color: var(--muted); font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; border-bottom: 1px solid var(--rule); vertical-align: bottom; }
+  table.grid thead th.task { writing-mode: vertical-rl; transform: rotate(180deg); height: 7rem; padding: 0.3rem 0.15rem; }
+  table.grid td.dot { cursor: pointer; font-family: var(--mono); }
+  table.grid td.dot.has { color: var(--saved); }
+  table.grid td.dot.no { color: var(--rule); }
+  table.grid td.dot:hover { background: var(--paper); }
+  table.grid tbody tr:hover th.who { color: var(--focus); }
+  .count { color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  .cards { display: grid; gap: 1rem; }
+  .card { background: #fff; border: 1px solid var(--rule); border-radius: 3px; overflow: hidden; }
+  .card > header { display: flex; align-items: baseline; gap: 0.6rem; padding: 0.45rem 0.6rem; background: var(--paper); border-bottom: 1px solid var(--rule); }
+  .card > header .name { font-weight: 700; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  .card > header .meta { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); }
+  .card > header .right { margin-left: auto; display: flex; gap: 0.3rem; }
+  .card pre { margin: 0; padding: 0.7rem 0.8rem; font-family: var(--mono); font-size: 0.85rem; line-height: 1.55; white-space: pre-wrap; word-break: break-word; background: var(--code-bg); overflow-x: auto; }
+  .empty { padding: 2.5rem 1rem; text-align: center; color: var(--muted); background: #fff; border: 1px dashed var(--rule); border-radius: 3px; }
+  .missing { color: var(--mark); font-size: 0.8rem; padding: 0.5rem 0.6rem; background: #fff; }
+  @media print {
+    .toolbar, .grid-wrap { display: none; }
+    .card { break-inside: avoid; border-color: #999; }
+  }
+</style>
+</head>
+<body>
+<div class="rev">
+  <h1>Code review</h1>
+  <p class="sub">Open the folder that holds your students' folders. Everything is read on this computer; nothing is uploaded.</p>
+
+  <div class="toolbar">
+    <button id="pick" type="button">Open folder</button>
+    <button id="reload" type="button" hidden>Reload</button>
+    <button id="byStudent" type="button" aria-pressed="true" hidden>By student</button>
+    <button id="byTask" type="button" aria-pressed="false" hidden>By task</button>
+    <input type="search" id="filter" placeholder="Filter student or task" hidden>
+    <span class="spacer"></span>
+    <span class="count" id="stats"></span>
+    <button id="print" type="button" hidden>Print</button>
+  </div>
+
+  <div id="gridWrap" class="grid-wrap" hidden></div>
+  <div id="body"><div class="empty">No folder open yet.</div></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/runmode/runmode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var root = null, data = [], mode = "student";
+
+  function idb() {
+    return new Promise(function (res, rej) {
+      var r = indexedDB.open("pyeditor-review", 1);
+      r.onupgradeneeded = function () { r.result.createObjectStore("kv"); };
+      r.onsuccess = function () { res(r.result); };
+      r.onerror = function () { rej(r.error); };
+    });
+  }
+  function kv(mode, fn) {
+    return idb().then(function (d) {
+      return new Promise(function (res, rej) {
+        var q = fn(d.transaction("kv", mode).objectStore("kv"));
+        q.onsuccess = function () { res(q.result); };
+        q.onerror = function () { rej(q.error); };
+      });
+    });
+  }
+
+  function esc(s) { return s.replace(/[&<>]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]; }); }
+
+  function highlight(code, pre) {
+    if (window.CodeMirror && CodeMirror.runMode) { CodeMirror.runMode(code, "python", pre); }
+    else { pre.textContent = code; }
+  }
+
+  /* read the header block pyeditor.js writes, if present */
+  function meta(text) {
+    var m = { student: null, task: null, saved: null, body: text };
+    var head = text.match(/^(?:#: .*\r?\n)+/);
+    if (head) {
+      m.body = text.slice(head[0].length).replace(/^\r?\n/, "");
+      head[0].split(/\r?\n/).forEach(function (l) {
+        var s = l.match(/^#: Student:\s*(.*)$/); if (s) m.student = s[1].trim();
+        var t = l.match(/^#: Task:\s*(.*)$/); if (t) m.task = t[1].trim();
+        var d = l.match(/^#: Saved:\s*(.*)$/); if (d) m.saved = d[1].trim();
+      });
+    }
+    return m;
+  }
+
+  function walk(dir, prefix, out) {
+    var jobs = [];
+    return (async function () {
+      for await (var entry of dir.values()) {
+        if (entry.kind === "directory") {
+          jobs.push(walk(entry, prefix ? prefix + "/" + entry.name : entry.name, out));
+        } else if (/\.py$/i.test(entry.name)) {
+          jobs.push(entry.getFile().then(function (f) {
+            return f.text().then(function (t) {
+              out.push({ path: prefix ? prefix + "/" + f.name : f.name, name: f.name, at: f.lastModified, text: t });
+            });
+          }));
+        }
+      }
+      return Promise.all(jobs);
+    })();
+  }
+
+  function scan() {
+    $("body").innerHTML = '<div class="empty">Reading\u2026</div>';
+    var students = [];
+    return (async function () {
+      var loose = [];
+      for await (var entry of root.values()) {
+        if (entry.kind === "directory") {
+          var files = [];
+          await walk(entry, "", files);
+          if (files.length) students.push({ name: entry.name, files: files });
+        } else if (/\.py$/i.test(entry.name)) {
+          var f = await entry.getFile();
+          loose.push({ path: f.name, name: f.name, at: f.lastModified, text: await f.text() });
+        }
+      }
+      if (loose.length) students.push({ name: root.name + " (loose files)", files: loose });
+      students.forEach(function (s) {
+        s.files.forEach(function (f) {
+          var m = meta(f.text);
+          f.body = m.body; f.task = m.task || f.path.replace(/\.py$/i, ""); f.declared = m.student; f.saved = m.saved;
+        });
+        s.files.sort(function (a, b) { return a.task.localeCompare(b.task, undefined, { numeric: true }); });
+      });
+      students.sort(function (a, b) { return a.name.localeCompare(b.name); });
+      data = students;
+      render();
+    })();
+  }
+
+  function allTasks() {
+    var set = {};
+    data.forEach(function (s) { s.files.forEach(function (f) { set[f.task] = 1; }); });
+    return Object.keys(set).sort(function (a, b) { return a.localeCompare(b, undefined, { numeric: true }); });
+  }
+
+  function renderGrid() {
+    var tasks = allTasks(), w = $("gridWrap");
+    if (!data.length) { w.hidden = true; return; }
+    w.hidden = false;
+    var h = '<table class="grid"><thead><tr><th class="who">Student</th>';
+    tasks.forEach(function (t) { h += '<th class="task">' + esc(t) + "</th>"; });
+    h += '<th class="task">done</th></tr></thead><tbody>';
+    data.forEach(function (s, si) {
+      h += '<tr><th class="who">' + esc(s.name) + "</th>";
+      tasks.forEach(function (t) {
+        var f = s.files.find(function (x) { return x.task === t; });
+        h += '<td class="dot ' + (f ? "has" : "no") + '" data-s="' + si + '" data-t="' + esc(t) + '" title="' +
+          esc(s.name + " \u2014 " + t + (f ? " \u2014 saved " + (f.saved || new Date(f.at).toLocaleString()) : " \u2014 nothing saved")) +
+          '">' + (f ? "\u25cf" : "\u00b7") + "</td>";
+      });
+      h += '<td class="count">' + s.files.length + "/" + tasks.length + "</td></tr>";
+    });
+    h += "</tbody></table>";
+    w.innerHTML = h;
+    w.querySelectorAll("td.dot.has").forEach(function (td) {
+      td.onclick = function () {
+        mode = "student"; sync();
+        render();
+        var el = document.getElementById("f-" + td.dataset.s + "-" + CSS.escape(td.dataset.t));
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      };
+    });
+  }
+
+  function card(title, metaText, code, id) {
+    var d = document.createElement("div");
+    d.className = "card"; if (id) d.id = id;
+    var head = document.createElement("header");
+    head.innerHTML = '<span class="name"></span><span class="meta"></span><span class="right"></span>';
+    head.querySelector(".name").textContent = title;
+    head.querySelector(".meta").textContent = metaText;
+    var copy = document.createElement("button");
+    copy.type = "button"; copy.textContent = "Copy";
+    copy.onclick = function () {
+      navigator.clipboard.writeText(code).then(function () {
+        copy.textContent = "Copied"; setTimeout(function () { copy.textContent = "Copy"; }, 1200);
+      });
+    };
+    head.querySelector(".right").appendChild(copy);
+    d.appendChild(head);
+    var pre = document.createElement("pre");
+    highlight(code, pre);
+    d.appendChild(pre);
+    return d;
+  }
+
+  function render() {
+    renderGrid();
+    var q = ($("filter").value || "").toLowerCase();
+    var wrap = document.createElement("div");
+    wrap.className = "cards";
+    var shown = 0;
+
+    if (mode === "student") {
+      data.forEach(function (s, si) {
+        if (q && s.name.toLowerCase().indexOf(q) === -1 &&
+            !s.files.some(function (f) { return f.task.toLowerCase().indexOf(q) > -1; })) return;
+        s.files.forEach(function (f) {
+          if (q && s.name.toLowerCase().indexOf(q) === -1 && f.task.toLowerCase().indexOf(q) === -1) return;
+          shown++;
+          wrap.appendChild(card(s.name + " \u2014 " + f.task,
+            f.path + "  \u00b7  " + (f.saved || new Date(f.at).toLocaleString()) +
+            (f.declared && f.declared !== s.name ? "  \u00b7  signed " + f.declared : ""),
+            f.body, "f-" + si + "-" + f.task));
+        });
+      });
+    } else {
+      allTasks().forEach(function (t) {
+        if (q && t.toLowerCase().indexOf(q) === -1) return;
+        var hdr = document.createElement("h2");
+        hdr.style.cssText = "font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;margin:1.2rem 0 -.2rem";
+        hdr.textContent = t;
+        wrap.appendChild(hdr);
+        var missing = [];
+        data.forEach(function (s, si) {
+          var f = s.files.find(function (x) { return x.task === t; });
+          if (!f) { missing.push(s.name); return; }
+          shown++;
+          wrap.appendChild(card(s.name, f.path + "  \u00b7  " + (f.saved || new Date(f.at).toLocaleString()),
+            f.body, "f-" + si + "-" + t));
+        });
+        if (missing.length) {
+          var m = document.createElement("div");
+          m.className = "missing";
+          m.textContent = "Nothing saved: " + missing.join(", ");
+          wrap.appendChild(m);
+        }
+      });
+    }
+
+    var body = $("body");
+    body.innerHTML = "";
+    if (!shown) body.innerHTML = '<div class="empty">Nothing matches that filter.</div>';
+    else body.appendChild(wrap);
+
+    var files = data.reduce(function (n, s) { return n + s.files.length; }, 0);
+    $("stats").textContent = data.length + " students \u00b7 " + files + " files \u00b7 " + allTasks().length + " tasks";
+  }
+
+  function sync() {
+    $("byStudent").setAttribute("aria-pressed", mode === "student");
+    $("byTask").setAttribute("aria-pressed", mode === "task");
+  }
+
+  function open(handle) {
+    root = handle;
+    ["reload", "byStudent", "byTask", "filter", "print"].forEach(function (id) { $(id).hidden = false; });
+    $("pick").textContent = "Change folder";
+    kv("readwrite", function (s) { return s.put(handle, "reviewRoot"); }).catch(function () { });
+    scan();
+  }
+
+  if (typeof window.showDirectoryPicker !== "function") {
+    $("body").innerHTML = '<div class="empty">This browser cannot open a folder. Use Edge or Chrome on a computer.</div>';
+    $("pick").disabled = true;
+  } else {
+    $("pick").onclick = function () {
+      window.showDirectoryPicker({ id: "esh-ict-review", mode: "read" }).then(open).catch(function () { });
+    };
+    kv("readonly", function (s) { return s.get("reviewRoot"); }).then(function (h) {
+      if (!h) return;
+      h.queryPermission({ mode: "read" }).then(function (p) {
+        if (p === "granted") open(h);
+        else {
+          $("pick").textContent = "Reopen " + h.name;
+          $("pick").onclick = function () {
+            h.requestPermission({ mode: "read" }).then(function (p2) {
+              if (p2 === "granted") open(h);
+              else window.showDirectoryPicker({ id: "esh-ict-review", mode: "read" }).then(open).catch(function () { });
+            });
+          };
+        }
+      });
+    }).catch(function () { });
+  }
+
+  $("reload").onclick = function () { scan(); };
+  $("byStudent").onclick = function () { mode = "student"; sync(); render(); };
+  $("byTask").onclick = function () { mode = "task"; sync(); render(); };
+  $("filter").oninput = function () { render(); };
+  $("print").onclick = function () { window.print(); };
+})();
+</script>
+</body>
+</html>

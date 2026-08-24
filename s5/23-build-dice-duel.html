@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build 3 — Dice duel — ICT S5 — Python</title>
+<link rel="stylesheet" href="../site.css">
+<link rel="stylesheet" href="../pyeditor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+</head>
+<body>
+<header class="top">
+  <a class="home" href="index.html">ICT S5 — Python</a>
+  <span class="crumb"></span>
+</header>
+<main>
+  <p class="eyebrow">Page 11 of 16</p>
+  <h1>Build 3 — Dice duel</h1>
+  <p>Two players, one round, and a set of rules that are more interesting than the code.</p>
+<p>In this one the programming is not the difficult part. The difficult part is turning a set of rules written in English into tests that happen in the right order.</p>
+<h2>THE RULES</h2>
+<pre class="sample">Each player rolls two dice.
+A player&#x27;s score is the total of their two dice.
+
+But:
+  * If a player rolls a double, their score is doubled.
+  * If a player rolls a double six, they win immediately, whatever the other player rolled.
+  * If both players roll a double six, it is a draw.
+  * Otherwise the higher score wins. Equal scores are a draw.</pre>
+<h2>WHAT IT MUST DO</h2>
+<ul><li>Ask for both players&#x27; names.</li><li>Roll two dice for each player and show what they rolled.</li><li>Apply the rules and announce the result in a full sentence.</li></ul>
+<pre class="sample">    import random
+    die = random.randint(1, 6)
+
+Sample Output :
+    Player 1 name: Otto
+    Player 2 name: Mila
+
+    Otto rolls 4 and 4 — double! Score 16
+    Mila rolls 6 and 3 — score 9
+
+    Otto wins.</pre>
+<h2>DECISIONS YOU HAVE TO MAKE</h2>
+<ul><li>The rules above are not in the order your program should test them in. Work out the right order on paper first. Getting this wrong is the whole difficulty of this build.</li><li>A double six is also a double. Make sure your program does not double it and then also declare an instant win — or decide that it should, and be able to justify it.</li><li>How do you print &quot;double!&quot; only when it is one?</li></ul>
+<h2>IF YOU FINISH EARLY</h2>
+<pre class="sample">Add a rule of your own and fit it into the order correctly.
+Then hand your program to somebody else on this route and see whether they can work out your rules just by playing it.</pre><h2 class="acts">Scratchpad</h2>
+<div class="pyeditor" data-task="23-build-dice-duel-scratch" data-unit="S5-Python" data-height="200">
+<script type="text/x-python">
+# 23-build-dice-duel — try things out here
+</script>
+</div>
+  <nav class="pager"><a class="prev" href="22-build-cafe-till.html">&larr; Build 2 — Café till</a><a class="next" href="24-build-rock-paper-scissors.html">Build 4 — Rock, paper, scissors &rarr;</a></nav>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script>window.PYEDITOR_CONFIG={course:"ICT S5 — Python",school:"European School The Hague"};</script>
+<script src="../pyeditor.js"></script>
+</body>
+</html>
